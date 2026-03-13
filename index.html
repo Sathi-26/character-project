@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+            background: #f4f1ea;
+            color: #1f1f1f;
+            min-height: 100vh;
+            padding: 32px 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fcfbf7;
+            border: 1px solid #d9d1c4;
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 14px 40px rgba(66, 53, 37, 0.08);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 24px;
+            padding-bottom: 24px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #e3dccf;
+        }
+
+        .header h1 {
+            font-size: clamp(2.2rem, 4vw, 3.8rem);
+            font-weight: 600;
+            letter-spacing: -0.06em;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #62594d;
+            max-width: 460px;
+            line-height: 1.5;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            font-size: 0.78rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #8a7d6b;
+            margin-bottom: 12px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+            gap: 24px;
+            align-items: start;
+        }
+
+        .sidebar,
+        .character-panel {
+            background: #fffdf8;
+            border: 1px solid #e7dfd1;
+            border-radius: 20px;
+            padding: 24px;
+        }
+
+        .selector-group {
+            margin-bottom: 18px;
+        }
+
+        .selector-group label {
+            display: block;
+            color: #4d453d;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        #character {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 0.98rem;
+            border: 1px solid #d2c9bb;
+            border-radius: 12px;
+            background: #f7f3ec;
+            color: #1f1f1f;
+            cursor: pointer;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        #character:hover {
+            border-color: #a3927b;
+            background: #f2ede4;
+        }
+
+        #character:focus {
+            outline: none;
+            border-color: #8d7a60;
+            box-shadow: 0 0 0 4px rgba(141, 122, 96, 0.12);
+        }
+
+        .meta-copy {
+            color: #756a5c;
+            font-size: 0.94rem;
+            line-height: 1.6;
+            margin-bottom: 22px;
+        }
+
+        .counter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 76px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: #efe8dc;
+            color: #5b5247;
+            font-size: 0.86rem;
+            font-weight: 600;
+        }
+
+        .character-panel {
+            display: grid;
+            gap: 20px;
+        }
+
+        .character-display {
+            overflow: hidden;
+            border-radius: 18px;
+            border: 1px solid #e7dfd1;
+            background: #f3eee5;
+        }
+
+        #characterImage {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            object-fit: cover;
+        }
+
+        .character-info {
+            display: block;
+        }
+
+        .character-name {
+            color: #1f1f1f;
+            font-size: clamp(1.8rem, 3vw, 2.6rem);
+            font-weight: 600;
+            letter-spacing: -0.04em;
+            margin-bottom: 12px;
+        }
+
+        .character-description {
+            color: #5f564b;
+            font-size: 1rem;
+            line-height: 1.7;
+            max-width: 52ch;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #d3cabd;
+            border-radius: 12px;
+            background: #fffdf8;
+            color: #2e2a25;
+            font-size: 0.96rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background: #f2ede4;
+            border-color: #a3927b;
+            transform: translateY(-1px);
+        }
+
+        .btn-next {
+            background: #2f2a24;
+            color: #f7f3eb;
+            border-color: #2f2a24;
+        }
+
+        .btn-next:hover {
+            background: #454038;
+            border-color: #454038;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header {
+                display: block;
+            }
+
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <span class="eyebrow">Character viewer</span>
+                <h1>Simple character gallery.</h1>
+                <p>Browse Garfield and friends in a cleaner, quieter layout focused on the artwork and short descriptions.</p>
+            </div>
+            <div class="counter">
+                <span id="counter">1 of 5</span>
+            </div>
+        </div>
+
+        <div class="layout">
+            <aside class="sidebar">
+                <div class="selector-group">
+                    <label for="character">Select a character</label>
+                    <select id="character" onchange="changeImage()">
+                        <option value="garfield">Garfield</option>
+                        <option value="odie">Odie</option>
+                        <option value="nermal">Nermal</option>
+                        <option value="pooky">Pooky</option>
+                        <option value="jon">Jon</option>
+                    </select>
+                </div>
+
+                <p class="meta-copy">Use the menu or the navigation buttons to move through the character set. The behavior stays the same, but the presentation is reduced to the essentials.</p>
+
+                <div class="button-group">
+                    <button class="btn-prev" onclick="previousCharacter()">Previous</button>
+                    <button class="btn-next" onclick="nextCharacter()">Next</button>
+                </div>
+            </aside>
+
+            <section class="character-panel">
+                <div class="character-display">
+                    <img id="characterImage" src="images/garfield.jpg" alt="Character">
+                </div>
+
+                <div class="character-info active" id="characterInfo">
+                    <div class="character-name" id="characterName">Garfield</div>
+                    <div class="character-description" id="characterDescription">
+                        The lazy, orange tabby cat who loves lasagna and hates Mondays.
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
